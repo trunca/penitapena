@@ -13,4 +13,12 @@ dist_install_DATA = \
 	LiberationSans-Bold.ttf \
 	LiberationSans-BoldItalic.ttf \
 	LiberationSans-Italic.ttf \
-	LiberationSans-Regular.ttf
+	LiberationSans-Regular.ttf \
+	tiny.ttf \
+	DroidSans-Bold.ttf \
+	cooper-black.ttf \
+	ae_AlMateen.license \
+	MyriadPro-Regular.otf \
+	MyriadPro-Semibold.otf \
+	MyriadPro-SemiboldIt.otf \
+	Roboto-Regular.ttf
