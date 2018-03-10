@@ -246,6 +246,10 @@ data/extensions/Makefile
 data/keymaps/Makefile
 data/hw_info/Makefile
 data/rc_models/Makefile
+data/lcd220/Makefile
+data/lcd400/Makefile
+data/lcd_skin220/Makefile
+data/lcd_skin400/Makefile
 data/skin_default/Makefile
 data/skin_default/menu/Makefile
 data/skin_default/icons/Makefile
