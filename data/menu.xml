@@ -13,6 +13,25 @@
 	<code> .. code .. </code>
 		"exec"s code
 -->
+	
+	<menu level="0" text="Menu SFteam" entryID="info_screen">
+			<id val="sfteam"/>
+                     <item weight="2" level="0" text="Change skin" entryID="skin_update"><screen module="SkinSelector" screen="SkinSelector"/></item> 
+                           <item level="0" text="EPGImport" entryID="paquetes_setup">
+		<code>
+from Plugins.Extensions.EPGImport.plugin import main
+main(self.session)
+		</code>
+		</item>
+<item level="0" text="Ajustar SKIN" entryID="paquetes_setup">
+		<code>
+from Plugins.SystemPlugins.OSDPositionSetup.plugin import main
+main(self.session)
+		</code>
+		</item>	
+		
+     </menu>
+
 		<item level="0" text="Timer" entryID="timer_edit"><screen module="TimerEdit" screen="TimerEditList"/></item>
 		<item level="1" text="VCR scart" entryID="scart_switch" configcondition="config.usage.show_vcr_scart" requires="ScartSwitch"><code>self.session.scart.VCRSbChanged(3)</code></item>
 
