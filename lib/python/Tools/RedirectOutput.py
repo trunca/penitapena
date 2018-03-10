@@ -3,7 +3,7 @@ from enigma import ePythonOutput
 
 class EnigmaLogDebug:
 
-	lvlDebug = 4
+	lvlDebug = 1
 
 	def __init__(self):
 		self.line = ''
