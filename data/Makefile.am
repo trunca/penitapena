@@ -25,6 +25,14 @@ else
 dist_pkgdata_DATA += skin_display.xml
 endif
 
+if HAVE_COLORLCD220
+SUBDIRS += lcd220 lcd_skin220
+endif
+
+if HAVE_COLORLCD400
+SUBDIRS += lcd400 lcd_skin400
+endif
+
 skin_display.xml: $(srcdir)/skin_display_default.xml
 	test -f $(srcdir)/skin_display_$(BOXTYPE).xml && cp $(srcdir)/skin_display_$(BOXTYPE).xml skin_display.xml || cp $(srcdir)/skin_display_default.xml skin_display.xml
 
