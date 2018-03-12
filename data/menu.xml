@@ -20,7 +20,12 @@
 from Plugins.Extensions.EPGImport.plugin import main
 main(self.session)
 		</code>
-
+<item level="0" text="FULL BACKUP" entryID="paquetes_setup">
+		<code>
+from Plugins.Extensions.BackupSuite.plugin import main
+main(self.session)
+		</code>
+		</item>
                      <item weight="5" level="0" text="Lcd Skin" entryID="skin_update"><screen module="LcdSkinSelector" screen="LCDSkinSelector"/></item>
 					 
                      <item weight="2" level="0" text="Change skin" entryID="skin_update"><screen module="SkinSelector" screen="SkinSelector"/></item> 
