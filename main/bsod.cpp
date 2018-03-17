@@ -174,6 +174,7 @@ void bsodFatal(const char *component)
 		stringFromFile(f, "stbmodel", "/proc/stb/info/boxtype");
 		stringFromFile(f, "stbmodel", "/proc/stb/info/vumodel");
 		stringFromFile(f, "stbmodel", "/proc/stb/info/model");
+		stringFromFile(f, "stbmodel", "/proc/stb/info/gbmodel");
 		stringFromFile(f, "kernelcmdline", "/proc/cmdline");
 		stringFromFile(f, "nimsockets", "/proc/bus/nim_sockets");
 		stringFromFile(f, "imageversion", "/etc/image-version");
