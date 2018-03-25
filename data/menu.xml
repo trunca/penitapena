@@ -13,6 +13,51 @@
 	<code> .. code .. </code>
 		"exec"s code
 -->
+	
+	 <menu level="0" text="Menu SFteam" entryID="info_screen">
+			<id val="sfteam"/>
+                     <code>
+from Plugins.Extensions.EPGImport.plugin import main
+main(self.session)
+		</code>
+<item level="0" text="FULL BACKUP" entryID="paquetes_setup">
+		<code>
+from Plugins.Extensions.BackupSuite.plugin import main
+main(self.session)
+		</code>
+		</item>
+                     <item level="0" text="LCD Display" entryID="paquetes_setup">
+		<code>
+from Plugins.Extensions.LCD4linux.plugin import main
+main(self.session)
+		</code>
+		</item>
+					 
+                     <item weight="2" level="0" text="Change skin" entryID="skin_update"><screen module="SkinSelector" screen="SkinSelector"/></item> 
+                           <item level="0" text="EPGImport" entryID="paquetes_setup">
+		<code>
+from Plugins.Extensions.EPGImport.plugin import main
+main(self.session)
+		</code>
+		</item>
+	
+<item level="0" text="Ajustar skin" entryID="paquetes_setup">
+		<code>
+from Plugins.SystemPlugins.OSDPositionSetup.plugin import main
+main(self.session)
+		</code>
+		</item>			 
+<item weight="1" level="0" text="SFtuner Server" entryID="sftunerserver_setup"><screen module="sfttunerserver" screen="TunerServer"/></item>     
+	        <item weight="3" level="0" text="Manager Swap" entryID="swap_setup"><screen module="Swapmanager" screen="Swap"/></item>
+                  <item level="0" entryID="usage_setup"><setup id="usage"/></item>
+	        <item level="0" entryID="user_interface"><setup id="userinterface"/></item>
+                <item weight="4" level="0" text="Software update" entryID="software_update"><screen module="SoftwareUpdate" screen="UpdatePlugin"/></item>
+
+                <item weight="0" level="0" text="Download Plugin" entryID="PluginBrowser_update"><screen module="PluginBrowser" screen="PluginDownloadBrowser"/></item>
+		
+     </menu>
+
+
 		<item level="0" text="Timer" entryID="timer_edit"><screen module="TimerEdit" screen="TimerEditList"/></item>
 		<item level="1" text="VCR scart" entryID="scart_switch" configcondition="config.usage.show_vcr_scart" requires="ScartSwitch"><code>self.session.scart.VCRSbChanged(3)</code></item>
 
@@ -31,6 +76,7 @@
 				<item text="Tuner configuration" entryID="tuner_setup"><screen module="Satconfig" screen="NimSelection"/></item>
 				<item text="Automatic scan" entryID="auto_scan"><screen module="ScanSetup" screen="ScanSimple"/></item>
 				<item text="Manual scan" entryID="manual_scan"><screen module="ScanSetup"/></item>
+				<item level="1" entryID="fallbacktuner_settings"><setup id="fallbacktuner"/></item>
 			</menu>
 			<menu weight="5" level="0" text="System" entryID="system_selection">
 				<id val="system"/>
