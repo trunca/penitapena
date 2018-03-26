@@ -13,45 +13,88 @@
 	<code> .. code .. </code>
 		"exec"s code
 -->
-	
-	 <menu level="0" text="Menu SFteam" entryID="info_screen">
-			<id val="sfteam"/>
-                     <code>
+
+<menu level="0" text="Menu SFteam" entryID="sfteam">
+                <id val="sfteam"/>
+              <menu level="0" weight="4" text="Configuracion" entryID="configuracion">
+            <id val="configuracion"/>
+             <item weight="4" level="0" text="Software update" entryID="software_update"><screen module="SoftwareUpdate" screen="UpdatePlugin"/></item>
+             <item level="0" entryID="usage_setup"><setup id="usage"/></item>
+	        <item level="0" entryID="user_interface"><setup id="userinterface"/></item>
+          </menu>
+
+                <item weight="0" level="0" text="Softcam Setup" entryID="softcam_setup"><screen module="SoftcamSetup" screen="SoftcamSetup"/></item>
+                <item weight="1" level="0" text="SFtuner Server" entryID="sftunerserver_setup"><screen module="sfttunerserver" screen="TunerServer"/></item>     
+	        
+                 
+                
+
+                <item weight="0" level="0" text="Download Plugin" entryID="PluginBrowser_update"><screen module="PluginBrowser" screen="PluginDownloadBrowser"/></item>
+<menu level="0" weight="4" text="Menu Utilidades" entryID="epg">
+            <id val="utilidades"/>
+                <item weight="3" level="0" text="Manager Swap" entryID="swap_setup"><screen module="Swapmanager" screen="Swap"/></item>
+                <item level="0" text="Free memory" entryID="memoria_setup">
+		<code>
+from Plugins.sftpanel.tools import DropScreen
+self.session.open(DropScreen)
+		</code>
+		</item>
+		<item level="0" text="Edit DNS" entryID="dns_setup">
+		<code>
+from Plugins.sftpanel.tools import DDNSScreen
+self.session.open(DDNSScreen)
+		</code>
+		</item>
+		<item weight="65" level="0" text="Manager Mounting" entryID="montaje_setup"><screen module="MountManager" screen="HddMount"/></item>
+              		<item level="0" text="Install packages" entryID="paquetes_setup">
+		<code>
+from Plugins.Extensions.MediaScanner.plugin import main
+main(self.session)
+		</code>
+		</item>
+		</menu>
+<menu level="0" weight="4" text="EPG" entryID="epg">
+            <id val="epg"/>
+                <item level="0" text="EPGImport" entryID="paquetes_setup">
+		<code>
 from Plugins.Extensions.EPGImport.plugin import main
 main(self.session)
 		</code>
-<item level="0" text="FULL BACKUP" entryID="paquetes_setup">
+		</item>
+            		  </menu>
+
+
+<menu level="0" weight="4" text="Crear Copias De Seguridad" entryID="backup">
+            <id val="backup"/>
+            <item level="0" text="Backup SFteam" entryID="backup_update"><screen module="ImageBackup" screen="ImageBackup"/></item>
+             <item level="0" text="BackupSuite" entryID="paquetes_setup">
 		<code>
 from Plugins.Extensions.BackupSuite.plugin import main
 main(self.session)
 		</code>
-		</item>
-                     <item weight="5" level="0" text="Lcd Skin" entryID="skin_update"><screen module="LcdSkinSelector" screen="LCDSkinSelector"/></item>
-					 
-                     <item weight="2" level="0" text="Change skin" entryID="skin_update"><screen module="SkinSelector" screen="SkinSelector"/></item> 
-                           <item level="0" text="EPGImport" entryID="paquetes_setup">
-		<code>
-from Plugins.Extensions.EPGImport.plugin import main
-main(self.session)
-		</code>
-		</item>
-	
-<item level="0" text="Ajustar skin" entryID="paquetes_setup">
+</item>
+            		  </menu>
+        
+
+        <menu level="0" weight="5" text="Seleccionar Skin" entryID="skin">
+            <id val="skin"/>
+            <item level="0" text="Ajustar skin" entryID="paquetes_setup">
 		<code>
 from Plugins.SystemPlugins.OSDPositionSetup.plugin import main
 main(self.session)
 		</code>
-		</item>			 
-<item weight="1" level="0" text="SFtuner Server" entryID="sftunerserver_setup"><screen module="sfttunerserver" screen="TunerServer"/></item>     
-	        <item weight="3" level="0" text="Manager Swap" entryID="swap_setup"><screen module="Swapmanager" screen="Swap"/></item>
-                  <item level="0" entryID="usage_setup"><setup id="usage"/></item>
-	        <item level="0" entryID="user_interface"><setup id="userinterface"/></item>
-                <item weight="4" level="0" text="Software update" entryID="software_update"><screen module="SoftwareUpdate" screen="UpdatePlugin"/></item>
-
-                <item weight="0" level="0" text="Download Plugin" entryID="PluginBrowser_update"><screen module="PluginBrowser" screen="PluginDownloadBrowser"/></item>
-		
-     </menu>
-
+		</item>
+            <item level="0" text="Change skin" entryID="skin_update"><screen module="SkinSelector" screen="SkinSelector"/></item>
+            <item level="2" text="LCD Display" entryID="paquetes_setup">
+		<code>
+from Plugins.Extensions.LCD4linux.plugin import main
+main(self.session)
+		</code>
+		</item>
+  </menu>
+        </menu>
+	
+	 
 
 		<item level="0" text="Timer" entryID="timer_edit"><screen module="TimerEdit" screen="TimerEditList"/></item>
 		<item level="1" text="VCR scart" entryID="scart_switch" configcondition="config.usage.show_vcr_scart" requires="ScartSwitch"><code>self.session.scart.VCRSbChanged(3)</code></item>
@@ -129,7 +172,7 @@ self.session.openWithCallback(msgClosed, FactoryReset)
 			<item weight="15" level="0" text="Flash image" entryID="flash_image" requires="canFlashWithOfgwrite" ><screen module="FlashImage" screen="SelectImage"/></item>
 			<item weight="15" level="0" text="Software update" entryID="software_update"><screen module="SoftwareUpdate" screen="UpdatePlugin"/></item>
 		</menu>
-		<menu text="Standby / restart" entryID="standby_restart_list">
+		<menu text="SFteam_Standby / restart" entryID="standby_restart_list">
 			<id val="shutdown"/>
 			<item text="Sleep timer" entryID="sleep"><screen module="SleepTimerEdit" screen="SleepTimerEdit"/></item>
 			<item text="Standby" entryID="standby"><screen module="Standby" screen="Standby"/></item>
