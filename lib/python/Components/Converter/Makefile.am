@@ -8,4 +8,5 @@ install_PYTHON = \
 	ServiceOrbitalPosition.py CryptoInfo.py TextCase.py \
 	ValueBitTest.py TunerInfo.py ConfigEntryTest.py ClientsStreaming.py TemplatedMultiContent.py ProgressToText.py \
 	Combine.py SensorToText.py ValueToPixmap.py PliExtraInfo.py genre.py TransponderInfo.py \
-	RotorPosition.py VfdDisplay.py
+	RotorPosition.py VfdDisplay.py SFTfullhdCaidDisplay.py SFTfullhdCaidInfo2.py  SFTfullhdEventName2.py \
+	SFTfullhdFrontendInfo2.py SFTfullhdNextEvents.py SFTfullhdRefString.py SFTServiceName.py
