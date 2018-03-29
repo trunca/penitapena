@@ -23,7 +23,7 @@
 
 static const char *crash_emailaddr =
 #ifndef CRASH_EMAILADDR
-	"the OpenPLi forum";
+	"the SFTEAM";
 #else
 	CRASH_EMAILADDR;
 #endif
@@ -155,7 +155,7 @@ void bsodFatal(const char *component)
 		strftime(tm_str, sizeof(tm_str), "%a %b %_d %T %Y", &tm);
 
 		fprintf(f,
-			"OpenPLi Enigma2 crash log\n\n"
+			"SFteam Enigma2 crash log\n\n"
 			"crashdate=%s\n"
 			"compiledate=%s\n"
 			"skin=%s\n"
@@ -174,6 +174,7 @@ void bsodFatal(const char *component)
 		stringFromFile(f, "stbmodel", "/proc/stb/info/boxtype");
 		stringFromFile(f, "stbmodel", "/proc/stb/info/vumodel");
 		stringFromFile(f, "stbmodel", "/proc/stb/info/model");
+		stringFromFile(f, "stbmodel", "/proc/stb/info/gbmodel");
 		stringFromFile(f, "kernelcmdline", "/proc/cmdline");
 		stringFromFile(f, "nimsockets", "/proc/bus/nim_sockets");
 		stringFromFile(f, "imageversion", "/etc/image-version");
