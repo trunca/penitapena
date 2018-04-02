@@ -66,8 +66,7 @@ main(self.session)
 
 <menu level="0" weight="4" text="Crear Copias De Seguridad" entryID="backup">
             <id val="backup"/>
-            <item level="0" text="Backup SFteam" entryID="backup_update"><screen module="ImageBackup" screen="ImageBackup"/></item>
-             <item level="0" text="BackupSuite" entryID="paquetes_setup">
+            <item level="0" text="BackupSuite" entryID="paquetes_setup">
 		<code>
 from Plugins.Extensions.BackupSuite.plugin import main
 main(self.session)
