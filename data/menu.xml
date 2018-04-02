@@ -45,7 +45,11 @@ from Plugins.sftpanel.tools import DDNSScreen
 self.session.open(DDNSScreen)
 		</code>
 		</item>
-		<item weight="65" level="0" text="Manager Mounting" entryID="montaje_setup"><screen module="MountManager" screen="HddMount"/></item>
+		<item level="0" text="Montar Unidad" entryID="paquetes_setup">
+		<code>
+from Plugins.Extensions.mountmanager.plugin import main
+main(self.session)
+		</code>
               		<item level="0" text="Install packages" entryID="paquetes_setup">
 		<code>
 from Plugins.Extensions.MediaScanner.plugin import main
