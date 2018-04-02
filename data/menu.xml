@@ -50,6 +50,7 @@ self.session.open(DDNSScreen)
 from Plugins.Extensions.mountmanager.plugin import main
 main(self.session)
 		</code>
+			</item>
               		<item level="0" text="Install packages" entryID="paquetes_setup">
 		<code>
 from Plugins.Extensions.MediaScanner.plugin import main
