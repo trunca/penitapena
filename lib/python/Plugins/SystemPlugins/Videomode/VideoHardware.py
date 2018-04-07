@@ -4,7 +4,7 @@ from Tools.CList import CList
 from Tools.HardwareInfo import HardwareInfo
 import os
 
-from boxbranding import getBoxType
+from enigma import getBoxType
 
 try:
 	file = open("/proc/stb/info/chipset", "r")
