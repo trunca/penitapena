@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys, os, time
 from Tools.HardwareInfo import HardwareInfo
-from boxbranding import getMachineBuild
 
 def getVersionString():
 	return getImageVersionString()
@@ -25,59 +24,6 @@ def getFlashDateString():
 	except:
 		return _("unknown")
 
-def getCPUString():
-	if getMachineBuild() in ('vuuno4kse','vuuno4k', 'vuultimo4k','vusolo4k', 'vuzero4k', 'hd51', 'hd52', 'sf4008', 'dm900','dm920', 'gb7252', 'dags7252', 'vs1500', 'et1x000', 'xc7439','h7','8100s','et13000','sf5008'):
-		return "Broadcom"
-	elif getMachineBuild() in ('u5','u5pvr','h9'):
-		return "Hisilicon"
-	else:
-		try:
-			system="unknown"
-			file = open('/proc/cpuinfo', 'r')
-			lines = file.readlines()
-			for x in lines:
-				splitted = x.split(': ')
-				if len(splitted) > 1:
-					splitted[1] = splitted[1].replace('\n','')
-					if splitted[0].startswith("system type"):
-						system = splitted[1].split(' ')[0]
-					elif splitted[0].startswith("Processor"):
-						system = splitted[1].split(' ')[0]
-			file.close()
-			return system
-		except IOError:
-			return "unavailable"
-
-def getCpuCoresString():
-	try:
-		file = open('/proc/cpuinfo', 'r')
-		lines = file.readlines()
-		for x in lines:
-			splitted = x.split(': ')
-			if len(splitted) > 1:
-				splitted[1] = splitted[1].replace('\n','')
-				if splitted[0].startswith("processor"):
-					if getMachineBuild() in ('vuultimo4k','u5','u5pvr','h9'):
-						cores = 4
-					elif int(splitted[1]) > 0:
-						cores = 2
-					else:
-						cores = 1
-		file.close()
-		return cores
-	except IOError:
-		return "unavailable"
-
-def getBuildDateString():
-	try:
-		from glob import glob
-		build = [x.split("-")[-2:-1][0][-8:] for x in open(glob("/var/lib/opkg/info/openpli-bootlogo.control")[0], "r") if x.startswith("Version:")][0]
-		if build.isdigit():
-			return  "%s-%s-%s" % (build[:4], build[4:6], build[6:])
-	except:
-		pass
-	return _("unknown")
-
 def getEnigmaVersionString():
 	import enigma
 	enigma_version = enigma.getEnigmaVersionString()
@@ -100,8 +46,7 @@ def getHardwareTypeString():
 
 def getImageTypeString():
 	try:
-		image_type = open("/etc/issue").readlines()[-2].strip()[:-6]
-		return image_type.capitalize()
+		return open("/etc/issue").readlines()[-2].capitalize().strip()[:-6]
 	except:
 		return _("undefined")
 
@@ -109,6 +54,7 @@ def getCPUInfoString():
 	try:
 		cpu_count = 0
 		cpu_speed = 0
+		temperature = None
 		for line in open("/proc/cpuinfo").readlines():
 			line = [x.strip() for x in line.strip().split(":")]
 			if line[0] in ("system type", "model name"):
@@ -126,19 +72,15 @@ def getCPUInfoString():
 					cpu_speed = int(int(binascii.hexlify(open('/sys/firmware/devicetree/base/cpus/cpu@0/clock-frequency', 'rb').read()), 16) / 100000000) * 100
 				except:
 					cpu_speed = "-"
-
-		temperature = None
 		if os.path.isfile('/proc/stb/fp/temp_sensor_avs'):
 			temperature = open("/proc/stb/fp/temp_sensor_avs").readline().replace('\n','')
-		elif os.path.isfile('/proc/stb/power/avs'):
-			temperature = open("/proc/stb/power/avs").readline().replace('\n','')
-		elif os.path.isfile("/sys/devices/virtual/thermal/thermal_zone0/temp"):
+		if os.path.isfile("/sys/devices/virtual/thermal/thermal_zone0/temp"):
 			try:
 				temperature = int(open("/sys/devices/virtual/thermal/thermal_zone0/temp").read().strip())/1000
 			except:
 				pass
 		if temperature:
-			return "%s %s MHz (%s) %s�C" % (processor, cpu_speed, ngettext("%d core", "%d cores", cpu_count) % cpu_count, temperature)
+			return "%s %s MHz (%s) %s°C" % (processor, cpu_speed, ngettext("%d core", "%d cores", cpu_count) % cpu_count, temperature)
 		return "%s %s MHz (%s)" % (processor, cpu_speed, ngettext("%d core", "%d cores", cpu_count) % cpu_count)
 	except:
 		return _("undefined")
@@ -162,24 +104,6 @@ def getPythonVersionString():
 		return output.split(' ')[1]
 	except:
 		return _("unknown")
-
-def getChipSetString():
-	if getMachineBuild() in ('dm7080','dm820'):
-		return "7435"
-	elif getMachineBuild() in ('dm520','dm525'):
-		return "73625"
-	elif getMachineBuild() in ('dm900','dm920','et13000','sf5008'):
-		return "7252S"
-	elif getMachineBuild() in ('hd51','vs1500','h7'):
-		return "7251S"
-	else:
-		try:
-			f = open('/proc/stb/info/chipset', 'r')
-			chipset = f.read()
-			f.close()
-			return str(chipset.lower().replace('\n','').replace('bcm','').replace('brcm','').replace('sti',''))
-		except IOError:
-			return "unavailable"
 
 def GetIPsFromNetworkInterfaces():
 	import socket, fcntl, struct, array, sys
@@ -212,4 +136,3 @@ def GetIPsFromNetworkInterfaces():
 
 # For modules that do "from About import about"
 about = sys.modules[__name__]
-
