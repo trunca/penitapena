@@ -9,14 +9,13 @@ from Components.Sources.StaticText import StaticText
 from VideoHardware import video_hw
 
 config.misc.videowizardenabled = ConfigBoolean(default = True)
-
 class VideoSetup(Screen, ConfigListScreen):
 
 	def __init__(self, session, hw):
 		Screen.__init__(self, session)
 		# for the skin: first try VideoSetup, then Setup, this allows individual skinning
 		self.skinName = ["VideoSetup", "Setup" ]
-		self.setup_title = _("A/V settings")
+		self.setup_title = _("Video settings")
 		self.setTitle(self.setup_title)
 		self.hw = hw
 		self.onChangedEntry = [ ]
@@ -98,31 +97,6 @@ class VideoSetup(Screen, ConfigListScreen):
 				if SystemInfo["ScartSwitch"]:
 					self.list.append(getConfigListEntry(_("Auto scart switching"), config.av.vcrswitch, _("When enabled, your receiver will detect activity on the VCR SCART input.")))
 
-		if level >= 1:
-			self.list.append(getConfigListEntry(_("Audio volume step size"), config.av.volume_stepsize, _("Configure the general audio volume step size (limit 1-10).")))
-			if SystemInfo["CanDownmixAC3"]:
-				self.list.append(getConfigListEntry(_("AC3 downmix"), config.av.downmix_ac3, _("Configure whether multi channel sound tracks should be downmixed to stereo.")))
-			if SystemInfo["CanDownmixDTS"]:
-				self.list.append(getConfigListEntry(_("DTS downmix"), config.av.downmix_dts, _("Configure whether multi channel sound tracks should be downmixed to stereo.")))
-			if SystemInfo["CanDownmixAAC"]:
-				self.list.append(getConfigListEntry(_("AAC downmix"), config.av.downmix_aac, _("Configure whether multi channel sound tracks should be downmixed to stereo.")))
-			self.list.extend((
-				getConfigListEntry(_("General AC3 delay"), config.av.generalAC3delay, _("Configure the general audio delay of Dolby Digital sound tracks.")),
-				getConfigListEntry(_("General PCM delay"), config.av.generalPCMdelay, _("Configure the general audio delay of stereo sound tracks."))
-			))
-			if SystemInfo["HasMultichannelPCM"]:
-				self.list.append(getConfigListEntry(_("Multichannel PCM"), config.av.multichannel_pcm, _("Configure whether multi channel PCM sound should be enabled.")))
-			if SystemInfo["HasAutoVolume"] or SystemInfo["HasAutoVolumeLevel"]:
-				self.list.append(getConfigListEntry(_("Audio auto volume level"), SystemInfo["HasAutoVolume"] and config.av.autovolume or config.av.autovolumelevel, _("This option allows you can to set the auto volume level.")))
-			if SystemInfo["Has3DSurround"]:
-				self.list.append(getConfigListEntry(_("3D surround"), config.av.surround_3d, _("This option allows you to enable 3D surround sound.")))
-				if SystemInfo["Has3DSpeaker"] and config.av.surround_3d.value != "none":
-					self.list.append(getConfigListEntry(_("3D surround speaker position"), config.av.speaker_3d, _("This option allows you to change the virtuell loadspeaker position.")))
-			if SystemInfo["Has3DSurroundSpeaker"]:
-				self.list.append(getConfigListEntry(_("3D surround speaker position"), config.av.surround_3d_speaker, _("This option allows you to disable or change the virtuell loadspeaker position.")))
-				if SystemInfo["Has3DSurroundSoftLimiter"] and config.av.surround_3d_speaker.value != "disabled":
-					self.list.append(getConfigListEntry(_("3D surround softlimiter"), config.av.surround_softlimiter_3d, _("This option allows you to enable 3D surround softlimiter.")))
-
 		if SystemInfo["CanChangeOsdAlpha"]:
 			self.list.append(getConfigListEntry(_("OSD transparency"), config.av.osd_alpha, _("Configure the transparency of the OSD.")))
 
@@ -131,11 +105,11 @@ class VideoSetup(Screen, ConfigListScreen):
 		if SystemInfo["HasBypassEdidChecking"]:
 			self.list.append(getConfigListEntry(_("Bypass HDMI EDID checking"), config.av.bypassEdidChecking, _("Configure if the HDMI EDID checking should be bypassed as this might solve issue with some TVs.")))
 		if SystemInfo["HasColorspace"]:
-			self.list.append(getConfigListEntry(_("HDMI Colorspace"), config.av.hdmicolorspace, _("This option allows you to configure the Colorspace from Auto to RGB")))
+			self.list.append(getConfigListEntry(_("HDMI Colorspace"), config.av.hdmicolorspace, _("This option allows you to set the Colorspace of HDMI from Auto to RGB")))
 		if SystemInfo["HasColordepth"]:
-			self.list.append(getConfigListEntry(_("HDMI Colordepth"), config.av.hdmicolordepth, _("This option allows you to configure the Colordepth for UHD")))
+			self.list.append(getConfigListEntry(_("HDMI Colordepth"), config.av.hdmicolordepth, _("This option allows you can config the Colordepth for UHD")))
 		if SystemInfo["HasColorimetry"]:
-			self.list.append(getConfigListEntry(_("HDMI Colorimetry"), config.av.hdmicolorimetry, _("This option allows you to configure the Colorimetry for HDR.")))
+			self.list.append(getConfigListEntry(_("HDMI Colorimetry"), config.av.hdmicolorimetry, _("This option allows you can config the Colorimetry for HDR.")))
 		if SystemInfo["HasHDMIpreemphasis"]:
 			self.list.append(getConfigListEntry(_("Use HDMI pre-emphasis"), config.av.hdmipreemphasis, _("This option can be useful for long HDMI cables.")))
 
@@ -175,6 +149,111 @@ class VideoSetup(Screen, ConfigListScreen):
 			self.session.openWithCallback(self.confirm, MessageBox, _("Is this video mode ok?"), MessageBox.TYPE_YESNO, timeout = 20, default = False)
 		else:
 			self.keySave()
+
+	# for summary:
+	def changedEntry(self):
+		for x in self.onChangedEntry:
+			x()
+
+	def getCurrentEntry(self):
+		return self["config"].getCurrent()[0]
+
+	def getCurrentValue(self):
+		return str(self["config"].getCurrent()[1].getText())
+
+	def getCurrentDescription(self):
+		return self["config"].getCurrent() and len(self["config"].getCurrent()) > 2 and self["config"].getCurrent()[2] or ""
+
+	def createSummary(self):
+		from Screens.Setup import SetupSummary
+		return SetupSummary
+
+class AudioSetup(Screen, ConfigListScreen):
+
+	def __init__(self, session, hw):
+		Screen.__init__(self, session)
+		# for the skin: first try VideoSetup, then Setup, this allows individual skinning
+		self.skinName = ["AudioSetup", "Setup" ]
+		self.setup_title = _("Audio settings")
+		self.setTitle(self.setup_title)
+		self.hw = hw
+		self.onChangedEntry = [ ]
+
+		# handle hotplug by re-creating setup
+		self.onShow.append(self.startHotplug)
+		self.onHide.append(self.stopHotplug)
+
+		self.list = [ ]
+		ConfigListScreen.__init__(self, self.list, session = session, on_change = self.changedEntry)
+
+		from Components.ActionMap import ActionMap
+		self["actions"] = ActionMap(["SetupActions", "MenuActions"],
+			{
+				"cancel": self.keyCancel,
+				"save": self.apply,
+				"menu": self.closeRecursive,
+			}, -2)
+
+		self["key_red"] = StaticText(_("Cancel"))
+		self["key_green"] = StaticText(_("OK"))
+		self["description"] = Label("")
+
+		self.createSetup()
+		self.onLayoutFinish.append(self.layoutFinished)
+
+	def layoutFinished(self):
+		self.setTitle(self.setup_title)
+
+	def startHotplug(self):
+		self.hw.on_hotplug.append(self.createSetup)
+
+	def stopHotplug(self):
+		self.hw.on_hotplug.remove(self.createSetup)
+
+	def createSetup(self):
+		level = config.usage.setup_level.index
+
+		self.list = [ ]
+		if SystemInfo["CanDownmixAC3"]:
+			self.list.append(getConfigListEntry(_("AC3 downmix"), config.av.downmix_ac3, _("Configure whether multi channel sound tracks should be downmixed to stereo.")))
+		if SystemInfo["CanDownmixDTS"]:
+			self.list.append(getConfigListEntry(_("DTS downmix"), config.av.downmix_dts, _("Configure whether multi channel sound tracks should be downmixed to stereo.")))
+		if level >= 1:
+			if SystemInfo["CanDownmixAAC"]:
+				self.list.append(getConfigListEntry(_("AAC downmix"), config.av.downmix_aac, _("Configure whether multi channel sound tracks should be downmixed to stereo.")))
+			self.list.extend((
+				getConfigListEntry(_("General AC3 delay"), config.av.generalAC3delay, _("Configure the general audio delay of Dolby Digital sound tracks.")),
+				getConfigListEntry(_("General PCM delay"), config.av.generalPCMdelay, _("Configure the general audio delay of stereo sound tracks."))
+			))
+			if SystemInfo["HasMultichannelPCM"]:
+				self.list.append(getConfigListEntry(_("Multichannel PCM"), config.av.multichannel_pcm, _("Configure whether multi channel PCM sound should be enabled.")))
+			if SystemInfo["HasAutoVolume"] or SystemInfo["HasAutoVolumeLevel"]:
+				self.list.append(getConfigListEntry(_("Audio auto volume level"), SystemInfo["HasAutoVolume"] and config.av.autovolume or config.av.autovolumelevel, _("This option configures you can set auto volume level.")))
+			if SystemInfo["Has3DSurround"]:
+				self.list.append(getConfigListEntry(_("3D surround"), config.av.surround_3d, _("This option allows you to enable 3D surround sound.")))
+				if SystemInfo["Has3DSpeaker"] and config.av.surround_3d.value != "none":
+					self.list.append(getConfigListEntry(_("3D surround speaker position"), config.av.speaker_3d, _("This option allows you to change the virtuell loadspeaker position.")))
+			if SystemInfo["Has3DSurroundSpeaker"]:
+				self.list.append(getConfigListEntry(_("3D surround speaker position"), config.av.surround_3d_speaker, _("This option allows you to disable or change the virtuell loadspeaker position.")))
+				if SystemInfo["Has3DSurroundSoftLimiter"] and config.av.surround_3d_speaker.value != "disabled":
+					self.list.append(getConfigListEntry(_("3D surround softlimiter"), config.av.surround_softlimiter_3d, _("This option allows you to enable 3D surround softlimiter.")))
+
+		self["config"].list = self.list
+		self["config"].l.setList(self.list)
+
+	def keyLeft(self):
+		ConfigListScreen.keyLeft(self)
+		self.createSetup()
+
+	def keyRight(self):
+		ConfigListScreen.keyRight(self)
+		self.createSetup()
+
+	def confirm(self, confirmed):
+		self.keySave()
+
+	def apply(self):
+		self.keySave()
 
 	# for summary:
 	def changedEntry(self):
@@ -247,11 +326,16 @@ def autostart(reason, session = None, **kwargs):
 def videoSetupMain(session, **kwargs):
 	session.open(VideoSetup, video_hw)
 
-def startSetup(menuid):
-	if menuid != "video":
-		return [ ]
+def audioSetupMain(session, **kwargs):
+	session.open(AudioSetup, video_hw)
 
-	return [(_("A/V settings"), videoSetupMain, "av_setup", 40)]
+def startSetup(menuid):
+	if menuid == "video_menu":
+		return [(_("Basic settings"), videoSetupMain, "video_setup", 40)]
+	if menuid == "audio_menu":
+		return [(_("Basic settings"), audioSetupMain, "audio_setup", 40)]
+
+	return [ ]
 
 def VideoWizard(*args, **kwargs):
 	from VideoWizard import VideoWizard
@@ -263,5 +347,5 @@ def Plugins(**kwargs):
 		PluginDescriptor(name=_("Video setup"), description=_("Advanced video setup"), where = PluginDescriptor.WHERE_MENU, needsRestart = False, fnc=startSetup)
 	]
 	if config.misc.videowizardenabled.value:
-		list.append(PluginDescriptor(name=_("Video wizard"), where = PluginDescriptor.WHERE_WIZARD, needsRestart = False, fnc=(20, VideoWizard)))
+		list.append(PluginDescriptor(name=_("Video wizard"), where = PluginDescriptor.WHERE_WIZARD, needsRestart = False, fnc=(15, VideoWizard)))
 	return list
