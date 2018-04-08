@@ -30,7 +30,7 @@
                 
 
                 <item weight="0" level="0" text="Download Plugin" entryID="PluginBrowser_update"><screen module="PluginBrowser" screen="PluginDownloadBrowser"/></item>
-<menu level="0" weight="4" text="Menu Utilidades" entryID="epg">
+<menu level="0" weight="4" text="Menu Utilidades" entryID="utilidades">
             <id val="utilidades"/>
                 <item weight="3" level="0" text="Manager Swap" entryID="swap_setup"><screen module="Swapmanager" screen="Swap"/></item>
                 <item level="0" text="Free memory" entryID="memoria_setup">
