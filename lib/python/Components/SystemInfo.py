@@ -1,4 +1,4 @@
-from enigma import eDVBResourceManager, Misc_Options
+from enigma import eDVBResourceManager, Misc_Options, eDVBCIInterfaces
 from Tools.Directories import fileExists, fileCheck, pathExists
 from Tools.HardwareInfo import HardwareInfo
 
@@ -19,6 +19,12 @@ def countFrontpanelLEDs():
 def hassoftcaminstalled():
 	from Tools.camcontrol import CamControl
 	return len(CamControl('softcam').getList()) > 1
+
+SystemInfo["CommonInterface"] = eDVBCIInterfaces.getInstance().getNumOfSlots()
+SystemInfo["CommonInterfaceCIDelay"] = fileCheck("/proc/stb/tsmux/rmx_delay")
+for cislot in range (0, SystemInfo["CommonInterface"]):
+	SystemInfo["CI%dSupportsHighBitrates" % cislot] = fileCheck("/proc/stb/tsmux/ci%d_tsclk"  % cislot)
+	SystemInfo["CI%dRelevantPidsRoutingSupport" % cislot] = fileCheck("/proc/stb/tsmux/ci%d_relevant_pids_routing"  % cislot)
 
 SystemInfo["HasSoftcamInstalled"] = hassoftcaminstalled()
 SystemInfo["NumVideoDecoders"] = getNumVideoDecoders()
@@ -60,20 +66,22 @@ SystemInfo["HasBypassEdidChecking"] = fileCheck("/proc/stb/hdmi/bypass_edid_chec
 SystemInfo["HasColorspace"] = fileCheck("/proc/stb/video/hdmi_colorspace")
 SystemInfo["HasColorspaceSimple"] = SystemInfo["HasColorspace"] and HardwareInfo().get_device_model() in "vusolo4k"
 SystemInfo["HasMultichannelPCM"] = fileCheck("/proc/stb/audio/multichannel_pcm")
-SystemInfo["HasMMC"] = HardwareInfo().get_device_model() in ('vusolo4k', 'vuuno4k', 'vuultimo4k', 'vusolo4kse', 'vuuno4kse', 'vuzero4k', 'hd51', 'hd52', 'vs1500', 'et11000', 'h7', 'gbquad4k', 'galaxy4k', 'linux', 'lunix3-4k', 'e4hd')
-SystemInfo["CommonInterfaceCIDelay"] = fileCheck("/proc/stb/tsmux/rmx_delay")
+SystemInfo["HasMMC"] = fileExists("/proc/cmdline") and "root=/dev/mmcblk" in open("/proc/cmdline", "r").read()
 SystemInfo["HasTranscoding"] = pathExists("/proc/stb/encoder/0") or fileCheck("/dev/bcm_enc0")
 SystemInfo["HasH265Encoder"] = fileExists("/proc/stb/encoder/0/vcodec_choices") and "h265" in open("/proc/stb/encoder/0/vcodec_choices", "r").read()
 SystemInfo["CanNotDoSimultaneousTranscodeAndPIP"] = HardwareInfo().get_device_model() in "vusolo4k"
 SystemInfo["HasColordepth"] = fileCheck("/proc/stb/video/hdmi_colordepth")
 SystemInfo["HasFrontDisplayPicon"] = HardwareInfo().get_device_model() in ("vusolo4k", "et8500")
+SystemInfo["Has24hz"] = fileCheck("/proc/stb/video/videomode_24hz")
+SystemInfo["Has2160p"] = fileExists("/proc/stb/video/videomode_preferred") and "2160p" in open("/proc/stb/video/videomode_preferred", "r").read()
 SystemInfo["HasHDMIpreemphasis"] = fileCheck("/proc/stb/hdmi/preemphasis")
 SystemInfo["HasColorimetry"] = fileCheck("/proc/stb/video/hdmi_colorimetry")
+SystemInfo["HasHdrType"] = fileCheck("/proc/stb/video/hdmi_hdrtype")
 SystemInfo["HasHDMI-CEC"] = HardwareInfo().has_hdmi() and fileExists("/usr/lib/enigma2/python/Plugins/SystemPlugins/HdmiCEC/plugin.pyo")
-SystemInfo["HasSwap"] = pathExists("/dev/mmcblk0p10")
-SystemInfo["HaveMultiBoot"] = (fileCheck("/boot/STARTUP") or fileCheck("/media/mmc/STARTUP"))
-SystemInfo["HaveMultiBootCY"] = fileCheck("/boot/STARTUP") and getMachineBuild() in ('8100s')
-SystemInfo["HaveMultiBootXC"] = fileCheck("/boot/cmdline.txt")
+SystemInfo["HasYPbPr"] = HardwareInfo().get_device_model() in ("dm8000", "et5000", "et6000", "et6500", "et9000", "et9200", "et9500", "et10000", "formuler1", "mbtwinplus", "spycat", "vusolo", "vuduo", "vuduo2", "vuultimo")
+SystemInfo["HasScart"] = HardwareInfo().get_device_model() in ("dm8000", "et4000", "et6500", "et8000", "et9000", "et9200", "et9500", "et10000", "formuler1", "hd1100", "hd1200", "hd1265", "hd2400", "vusolo", "vusolo2", "vuduo", "vuduo2", "vuultimo", "vuuno", "xp1000")
+SystemInfo["HasSVideo"] = HardwareInfo().get_device_model() in ("dm8000")
+SystemInfo["HasComposite"] = HardwareInfo().get_device_model() not in ("i55", "gbquad4k", "gbue4k", "hd1500", "osnino", "osninoplus", "purehd", "purehdse", "revo4k", "vusolo4k", "vuzero4k")
 SystemInfo["HasAutoVolume"] = fileExists("/proc/stb/audio/avl_choices") and fileCheck("/proc/stb/audio/avl")
 SystemInfo["HasAutoVolumeLevel"] = fileExists("/proc/stb/audio/autovolumelevel_choices") and fileCheck("/proc/stb/audio/autovolumelevel")
 SystemInfo["Has3DSurround"] = fileExists("/proc/stb/audio/3d_surround_choices") and fileCheck("/proc/stb/audio/3d_surround")
@@ -83,6 +91,5 @@ SystemInfo["Has3DSurroundSoftLimiter"] = fileExists("/proc/stb/audio/3dsurround_
 SystemInfo["hasXcoreVFD"] = HardwareInfo().get_device_model() in ('osmega','spycat4k','spycat4kmini','spycat4kcombo') and fileCheck("/sys/module/brcmstb_%s/parameters/pt6302_cgram" % HardwareInfo().get_device_model())
 SystemInfo["HasOfflineDecoding"] = HardwareInfo().get_device_model() not in ('osmini', 'osminiplus', 'et7000mini', 'et11000', 'mbmicro', 'mbtwinplus', 'mbmicrov2', 'et7000', 'et8500')
 SystemInfo["canFlashWithOfgwrite"] = not HardwareInfo().get_device_model().startswith("dm")
-SystemInfo["canMultiBoot"] = HardwareInfo().get_device_model() in ('hd51', 'h7', 'vs1500', 'e4hd')
-SystemInfo["canMode12"] = SystemInfo["canMultiBoot"] and '200M' if HardwareInfo().get_device_model() == "h7" else '192M'
-
+SystemInfo["canMultiBoot"] = HardwareInfo().get_device_model() in ('hd51', 'h7', 'vs1500', 'e4hd') and (1, 4) or HardwareInfo().get_device_model() in ('gbue4k', 'gbquad4k') and (3, 3)
+SystemInfo["canMode12"] = HardwareInfo().get_device_model() in ("hd51", "vs1500") and '192M' or HardwareInfo().get_device_model() in ("h7") and '200M'
